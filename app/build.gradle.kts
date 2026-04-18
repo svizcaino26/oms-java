@@ -23,6 +23,12 @@ dependencies {
 
     // This dependency is used by the application.
     implementation(libs.guava)
+
+    // Source: https://mvnrepository.com/artifact/org.postgresql/postgresql
+    runtimeOnly("org.postgresql:postgresql:42.7.9")
+
+    // Source: https://mvnrepository.com/artifact/io.github.cdimascio/dotenv-java
+    implementation("io.github.cdimascio:dotenv-java:3.2.0")
 }
 
 // Apply a specific Java toolchain to ease working on different environments.
@@ -34,7 +40,7 @@ java {
 
 application {
     // Define the main class for the application.
-    mainClass = "org.example.App"
+    mainClass = "com.ohmystore.App"
 }
 
 tasks.named<Test>("test") {
