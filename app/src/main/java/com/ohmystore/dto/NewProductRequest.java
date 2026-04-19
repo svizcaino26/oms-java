@@ -1,6 +1,6 @@
 package com.ohmystore.dto;
 
-class NewProductRequest {
+public class NewProductRequest {
   private String name;
   private int priceCents;
   private String description;
@@ -20,5 +20,20 @@ class NewProductRequest {
     if (priceCents < 0) {
       throw new IllegalArgumentException("Price must be >= 0");
     }
+    if (name == null || name.isBlank()) {
+        throw new IllegalArgumentException("Name is required");
+    }
+  }
+
+  public String name () {
+    return name;
+  }
+
+  public int priceCents () {
+    return priceCents;
+  }
+
+  public String description () {
+    return description;
   }
 }
