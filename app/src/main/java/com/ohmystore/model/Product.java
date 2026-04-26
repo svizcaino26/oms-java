@@ -29,4 +29,8 @@ public class Product {
   public String toString() {
     return "Product: " + name + "\nID: " + id + "\nPrice: " + priceCents + "\n";
   }
+
+  public int getId() {
+    return id;
+  }
 }
