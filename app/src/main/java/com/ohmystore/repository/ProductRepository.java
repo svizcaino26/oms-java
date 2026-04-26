@@ -7,6 +7,7 @@ import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class ProductRepository {
   private final Database db;
@@ -74,6 +75,24 @@ public class ProductRepository {
         }
       }
       return products;
+    }
+  }
+
+  public Optional<Product> findById(int id) throws SQLException {
+    try (Connection conn = db.getConnection();
+        PreparedStatement st =
+            conn.prepareStatement(
+                """
+                  SELECT * FROM products
+                  WHERE id = ?
+                """)) {
+      st.setInt(1, id);
+      try (ResultSet rs = st.executeQuery()) {
+        if (!rs.next()) {
+          return Optional.empty();
+        }
+        return Optional.of(mapRow(rs));
+      }
     }
   }
 }

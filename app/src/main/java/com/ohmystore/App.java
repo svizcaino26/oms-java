@@ -6,6 +6,7 @@ import com.ohmystore.repository.ProductRepository;
 import io.github.cdimascio.dotenv.Dotenv;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 
 public class App {
   public static void main(String[] args) {
@@ -40,8 +41,15 @@ public class App {
       for (Product p : productsLimit) {
         System.out.println(p);
       }
+
+      Optional<Product> productById = productRepo.findById(3);
+      if (productById.isPresent()) {
+        System.out.println(productById.get());
+      } else {
+        System.err.println("Product not found");
+      }
     } catch (SQLException e) {
-      System.err.println(e);
+      System.err.println("Error returned: " + e);
     }
   }
 }
