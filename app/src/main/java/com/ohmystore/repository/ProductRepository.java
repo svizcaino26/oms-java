@@ -95,4 +95,20 @@ public class ProductRepository {
       }
     }
   }
+
+  public boolean delete(int id) throws SQLException {
+    try (Connection conn = db.getConnection();
+        PreparedStatement st =
+            conn.prepareStatement(
+                """
+                  DELETE FROM products
+                  WHERE id = ?
+                """)) {
+      st.setInt(1, id);
+
+      int affectedRows = st.executeUpdate();
+
+      return affectedRows > 0;
+    }
+  }
 }

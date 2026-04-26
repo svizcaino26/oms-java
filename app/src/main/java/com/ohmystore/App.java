@@ -48,6 +48,13 @@ public class App {
       } else {
         System.err.println("Product not found");
       }
+
+      boolean deleted = productRepo.delete(productById.get().getId());
+      if (deleted) {
+        System.out.println("Product deleted");
+      } else {
+        System.err.println("Product not found");
+      }
     } catch (SQLException e) {
       System.err.println("Error returned: " + e);
     }
