@@ -1,8 +1,12 @@
 package com.ohmystore;
 
 import com.ohmystore.config.Database;
+import com.ohmystore.dto.NewProductRequest;
+import com.ohmystore.exception.ValidationException;
 import com.ohmystore.model.Product;
 import com.ohmystore.repository.ProductRepository;
+import com.ohmystore.type.NonEmptyString;
+import com.ohmystore.type.PriceCents;
 import io.github.cdimascio.dotenv.Dotenv;
 import java.sql.SQLException;
 import java.util.List;
@@ -20,17 +24,17 @@ public class App {
     Database db = new Database(url, user, password);
     ProductRepository productRepo = new ProductRepository(db);
 
-    // NewProductRequest req = new NewProductRequest("SLR Cammera", 60000);
-
-    // try {
-    //   req.validate();
-    //   Product newProduct = productRepo.save(req);
-    //   System.out.println(newProduct);
-    // } catch (SQLException e) {
-    //   System.err.println(e);
-    // } catch (IllegalArgumentException e) {
-    //   System.err.println(e);
-    // }
+    try {
+      NonEmptyString name = new NonEmptyString("SLR Camera");
+      PriceCents priceCents = new PriceCents(-12000);
+      NewProductRequest req = new NewProductRequest(name, priceCents);
+      Product newProduct = productRepo.save(req);
+      System.out.println(newProduct);
+    } catch (SQLException e) {
+      System.err.println(e);
+    } catch (ValidationException e) {
+      System.err.println(e);
+    }
     try {
       List<Product> products = productRepo.findAll();
       for (Product p : products) {
