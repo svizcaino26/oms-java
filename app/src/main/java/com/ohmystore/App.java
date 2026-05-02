@@ -1,10 +1,10 @@
 package com.ohmystore;
 
 import com.ohmystore.config.Database;
-import com.ohmystore.dto.PriceCents;
 import com.ohmystore.dto.UpdateProductRequest;
 import com.ohmystore.exception.ValidationException;
 import com.ohmystore.repository.ProductRepository;
+import com.ohmystore.type.PriceCents;
 import io.github.cdimascio.dotenv.Dotenv;
 import java.sql.SQLException;
 
@@ -28,7 +28,10 @@ public class App {
 
       int id = 5;
       UpdateProductRequest updateReq =
-          new UpdateProductRequest.Builder().priceCents(new PriceCents(125000)).build();
+          new UpdateProductRequest.Builder()
+              .priceCents(new PriceCents(125000))
+              .description("Sony SLR camera")
+              .build();
 
       boolean updated = productRepo.update(id, updateReq);
       if (updated) {

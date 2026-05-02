@@ -157,11 +157,7 @@ public class ProductRepository {
       int i = 0;
       for (Object object : parameterList) {
         i += 1;
-        if (object instanceof String) {
-          st.setString(i, (String) object);
-        } else {
-          st.setInt(i, (int) object);
-        }
+        st.setObject(i, object);
       }
       int affectedRows = st.executeUpdate();
       return affectedRows > 0;
