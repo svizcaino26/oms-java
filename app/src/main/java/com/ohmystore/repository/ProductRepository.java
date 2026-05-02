@@ -2,6 +2,8 @@ package com.ohmystore.repository;
 
 import com.ohmystore.config.Database;
 import com.ohmystore.dto.NewProductRequest;
+import com.ohmystore.dto.UpdateProductRequest;
+import com.ohmystore.exception.ValidationException;
 import com.ohmystore.model.Product;
 import java.sql.*;
 import java.time.LocalDateTime;
@@ -108,6 +110,60 @@ public class ProductRepository {
 
       int affectedRows = st.executeUpdate();
 
+      return affectedRows > 0;
+    }
+  }
+
+  public boolean update(int id, UpdateProductRequest req) throws SQLException {
+    boolean insertFields = false;
+    List<Object> parameterList = new ArrayList<>();
+    StringBuilder sql = new StringBuilder("UPDATE products SET ");
+
+    if (req.name() != null) {
+      sql.append("name = ?");
+      parameterList.add(req.name().get());
+      insertFields = true;
+    }
+
+    if (req.priceCents() != null) {
+      if (insertFields) {
+        sql.append(", ");
+      }
+      sql.append("price_cents = ?");
+      parameterList.add(req.priceCents().get());
+      insertFields = true;
+    }
+
+    if (req.description() != null) {
+      if (insertFields) {
+        sql.append(", ");
+      }
+      sql.append("description = ?");
+      parameterList.add(req.description());
+      insertFields = true;
+    }
+
+    if (!parameterList.isEmpty()) {
+      sql.append(" WHERE id = ?");
+      parameterList.add(id);
+    } else {
+      throw new ValidationException("Empty query when received while trying to update product");
+    }
+
+    String queryString = new String(sql);
+
+    try (Connection conn = db.getConnection();
+        PreparedStatement st = conn.prepareStatement(queryString)) {
+      int i = 0;
+      for (Object object : parameterList) {
+        i += 1;
+        if (object instanceof String) {
+          st.setString(i, (String) object);
+        } else {
+          st.setInt(i, (int) object);
+        }
+      }
+      int affectedRows = st.executeUpdate();
       return affectedRows > 0;
     }
   }
