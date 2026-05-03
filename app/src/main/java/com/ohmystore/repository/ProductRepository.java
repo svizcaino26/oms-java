@@ -3,13 +3,13 @@ package com.ohmystore.repository;
 import com.ohmystore.config.Database;
 import com.ohmystore.dto.NewProductRequest;
 import com.ohmystore.dto.UpdateProductRequest;
+import com.ohmystore.exception.NotFoundException;
 import com.ohmystore.exception.ValidationException;
 import com.ohmystore.model.Product;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class ProductRepository {
   private final Database db;
@@ -80,7 +80,7 @@ public class ProductRepository {
     }
   }
 
-  public Optional<Product> findById(int id) throws SQLException {
+  public Product findById(int id) throws SQLException {
     try (Connection conn = db.getConnection();
         PreparedStatement st =
             conn.prepareStatement(
@@ -91,9 +91,10 @@ public class ProductRepository {
       st.setInt(1, id);
       try (ResultSet rs = st.executeQuery()) {
         if (!rs.next()) {
-          return Optional.empty();
+          // return Optional.empty();
+          throw new NotFoundException("Product not found - id: " + id);
         }
-        return Optional.of(mapRow(rs));
+        return mapRow(rs);
       }
     }
   }
