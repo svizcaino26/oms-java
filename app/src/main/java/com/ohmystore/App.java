@@ -2,8 +2,11 @@ package com.ohmystore;
 
 import com.ohmystore.config.Database;
 import com.ohmystore.exception.NotFoundException;
+import com.ohmystore.exception.ValidationException;
 import com.ohmystore.model.Product;
+import com.ohmystore.repository.InventoryRepository;
 import com.ohmystore.repository.ProductRepository;
+import com.ohmystore.type.InventoryQuantity;
 import io.github.cdimascio.dotenv.Dotenv;
 import java.sql.SQLException;
 
@@ -57,6 +60,13 @@ public class App {
       Product productById = productRepo.findById(4);
       System.out.println(productById);
 
+      InventoryRepository inventoryRepo = new InventoryRepository(db);
+
+      boolean inventoryEntry = inventoryRepo.increaseStock(7, new InventoryQuantity(5));
+      if (inventoryEntry) {
+        System.out.println("Inventory entry added");
+      }
+
       //   boolean deleted = productRepo.delete(productById.get().getId());
       //   if (deleted) {
       //     System.out.println("Product deleted");
@@ -66,6 +76,8 @@ public class App {
     } catch (SQLException e) {
       System.err.println("Error returned: " + e);
     } catch (NotFoundException e) {
+      System.err.println(e);
+    } catch (ValidationException e) {
       System.err.println(e);
     }
   }
